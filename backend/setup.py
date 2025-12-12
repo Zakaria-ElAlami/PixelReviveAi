@@ -7,11 +7,8 @@ FILES = {
     "colorization_release_v2.caffemodel": "https://huggingface.co/spaces/BilalSardar/Black-N-White-To-Color/resolve/main/colorization_release_v2.caffemodel",
     "pts_in_hull.npy": "https://raw.githubusercontent.com/richzhang/colorization/caffe/resources/pts_in_hull.npy"
 }
-
-# Target: backend/models
-SAVE_DIR = os.path.join("backend", "models")
-os.makedirs(SAVE_DIR, exist_ok=True)
-
+# Since this script is now INSIDE backend, we just save to "models"
+SAVE_DIR = os.path.join(os.path.dirname(__file__), "models")
 print(f"🚀 Starting download to {SAVE_DIR}...")
 
 for filename, url in FILES.items():
