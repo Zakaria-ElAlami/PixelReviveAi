@@ -7,8 +7,13 @@ import requests
 
 app = FastAPI()
 
+# --- BULLETPROOF CORS ---
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow ALL origins (Safest for portfolio)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow ALL methods (POST, GET, OPTIONS)
+    allow_headers=["*"],  # Allow ALL headers
 )
 
 # --- CONFIGURATION ---
@@ -18,9 +23,8 @@ PROTOTXT = os.path.join(MODEL_DIR, "colorization_deploy_v2.prototxt")
 MODEL_WEIGHTS = os.path.join(MODEL_DIR, "colorization_release_v2.caffemodel")
 POINTS = os.path.join(MODEL_DIR, "pts_in_hull.npy")
 
-# --- SELF-HEALING: DOWNLOADER FUNCTION ---
+# --- SELF-HEALING DOWNLOADER ---
 def check_and_download_models():
-    """Checks if models exist. If not, downloads them instantly."""
     if not os.path.exists(MODEL_DIR):
         os.makedirs(MODEL_DIR)
 
@@ -44,11 +48,11 @@ def check_and_download_models():
             except Exception as e:
                 print(f"❌ Failed to download {filename}: {e}")
 
-# --- RUN CHECK AT STARTUP ---
+# Run Check
 print("🔍 Checking AI Models...")
 check_and_download_models()
 
-# --- LOAD AI BRAIN ---
+# Load Brain
 print("🧠 Loading Neural Network...")
 net = cv2.dnn.readNetFromCaffe(PROTOTXT, MODEL_WEIGHTS)
 pts = np.load(POINTS)
@@ -66,12 +70,14 @@ def home():
 
 @app.post("/colorize")
 async def colorize(file: UploadFile = File(...)):
+    # Read Image
     contents = await file.read()
     nparr = np.frombuffer(contents, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     
+    # Process
     h, w = img.shape[:2]
-    if h > 800 or w > 800: # Optimize large images
+    if h > 800 or w > 800:
         scale = 800 / max(h, w)
         img = cv2.resize(img, (int(w * scale), int(h * scale)))
         h, w = img.shape[:2]
