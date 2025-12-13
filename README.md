@@ -9,7 +9,7 @@
 ---
 
 ## 📸 Demo (Running Locally)
-![App Demo](<img width="1920" height="1080" alt="Screenshot (230)" src="https://github.com/user-attachments/assets/d7649053-e6d0-485e-a5d5-d01ac77e792f" />
+(<img width="1920" height="1080" alt="Screenshot (230)" src="https://github.com/user-attachments/assets/d7649053-e6d0-485e-a5d5-d01ac77e792f" />
 )
 *Screenshot of the application successfully colorizing an image in a local environment.*
 
