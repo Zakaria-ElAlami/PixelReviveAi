@@ -25,8 +25,9 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/colorize", formData, { responseType: 'blob' });
-      setResult(URL.createObjectURL(res.data));
+      const res = await axios.post("https://pixelreviveai.onrender.com/colorize", formData, { 
+      responseType: 'blob',
+});      setResult(URL.createObjectURL(res.data));
     } catch (err) {
       alert("Error: Is the Backend Running?");
     }
